@@ -66,11 +66,12 @@ SickSafetyscannersRos::SickSafetyscannersRos()
     m_nh.advertise<sick_safetyscanners::OutputPathsMsg>("output_paths", 100);
   m_field_service_server =
     m_nh.advertiseService("field_data", &SickSafetyscannersRos::getFieldData, this);
-
   m_config_metadata_server =
     m_nh.advertiseService("config_metadata", &SickSafetyscannersRos::getConfigMetadata, this);
   m_status_overview_server =
     m_nh.advertiseService("status_overview", &SickSafetyscannersRos::getStatusOverview, this);
+  m_send_sensor_settings_server =
+    m_nh.advertiseService("send_sensor_settings", &SickSafetyscannersRos::sendSensorSettings, this);
 
   // Diagnostics for frequency
   m_diagnostic_updater.setHardwareID(m_communication_settings.getSensorIp().to_string());
@@ -910,6 +911,15 @@ bool SickSafetyscannersRos::getStatusOverview(sick_safetyscanners::StatusOvervie
   res.error_info_time_time = status_overview.getErrorInfoTime();
   res.error_info_time      = getDateString(res.error_info_time_date, res.error_info_time_time);
 
+  return true;
+}
+
+bool SickSafetyscannersRos::sendSensorSettings(std_srvs::Trigger::Request& req,
+                                              std_srvs::Trigger::Response& res)
+{
+  m_device->changeSensorSettings(m_communication_settings);
+  res.success = true;
+  res.message = "Successfully send sensor settings";
   return true;
 }
 

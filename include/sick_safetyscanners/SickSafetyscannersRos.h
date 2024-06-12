@@ -42,6 +42,7 @@
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
 #include <sensor_msgs/LaserScan.h>
+#include <std_srvs/Trigger.h>
 
 // STD
 #include <string>
@@ -146,6 +147,7 @@ private:
   ros::ServiceServer m_field_service_server;
   ros::ServiceServer m_config_metadata_server;
   ros::ServiceServer m_status_overview_server;
+  ros::ServiceServer m_send_sensor_settings_server;
 
   bool m_initialised;
 
@@ -232,6 +234,9 @@ private:
 
   bool getStatusOverview(sick_safetyscanners::StatusOverview::Request& req,
                          sick_safetyscanners::StatusOverview::Response& res);
+
+  bool sendSensorSettings(std_srvs::Trigger::Request& req,
+                            std_srvs::Trigger::Response& res);
 
   /**
    * @brief getCheckSumString converts the uint32 value received as checksum such that the
